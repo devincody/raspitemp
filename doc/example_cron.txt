@@ -1,0 +1,9 @@
+# m h  dom mon dow   command
+0 */6 * * * /usr/bin/python3 /home/pi/Documents/raspitemp/plot_data.py 1 >> /home/pi/temp_plot.log 2>&1
+0 1 * * * /usr/bin/python3 /home/pi/Documents/raspitemp/plot_data.py 3 >> /home/pi/temp_plot.log 2>&1
+0 2 * * * /usr/bin/python3 /home/pi/Documents/raspitemp/plot_data.py 5 >> /home/pi/temp_plot.log 2>&1
+0 3 * * * /usr/bin/python3 /home/pi/Documents/raspitemp/plot_data.py 7 >> /home/pi/temp_plot.log 2>&1
+0 4 * * * /usr/bin/python3 /home/pi/Documents/raspitemp/plot_data.py -r >> /home/pi/temp_plot.log 2>&1
+0 5 * * * /usr/bin/python3 /home/pi/Documents/raspitemp/plot_data.py -1 >> /home/pi/temp_plot.log 2>&1
+0 6 * * * shutdown -t 1 >> /home/pi/temp_plot.log 2>&1
+0 7 * * * sudo cp `find /home/pi/Documents/raspitemp/plots/*/*.png -mtime 0` /media/nas/temp_plots/ >> /home/pi/cp_temp_plots.log 2>&1
