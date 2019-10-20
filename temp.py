@@ -8,6 +8,8 @@ import digitalio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
 
+print("starting temp.py")
+
 # Define the Reset Pin
 oled_reset = digitalio.DigitalInOut(board.D4)
 
@@ -80,6 +82,7 @@ iidx = 0
 oidx = 0
 NAVG = 100
 first_iter = True
+print("entering infinite loop")
 while True:
     if first_iter and iidx < NAVG:
         navg = iidx
@@ -134,5 +137,5 @@ while True:
     if (iidx == N):
         iidx = 0
         oidx = 0
-        np.save("/home/pi/Documents/temp/data2/data_{}.npy".format(time.strftime("%Y%m%d-%H%M%S")), data)
+        np.save("/home/pi/Documents/raspitemp/data2/data_{}.npy".format(time.strftime("%Y%m%d-%H%M%S")), data)
         #np.save("/home/pi/Documents/temp/data/outdoor_temps_{}.npy".format(time.strftime("%Y%m%d-%H%M%S")),outdoor_t)

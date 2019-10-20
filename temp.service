@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 User=pi
 EnvironmentFile=/home/pi/Documents/iftttkey.env
-WorkingDirectory=/home/pi/Documents/temp
-ExecStart=/usr/bin/python3 /home/pi/Documents/temp/temp.py
+WorkingDirectory=/home/pi/Documents/raspitemp
+ExecStart=/usr/bin/python3 /home/pi/Documents/raspitemp/temp.py >> /home/pi/Documents/raspitemp.log 2>&1
 Restart=on-failure
 # Other restart options: always, on-abort, etc
 

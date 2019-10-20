@@ -22,8 +22,9 @@ def main():
     indoor = []
     outdoor = []
     times = []
-    cwd = os.getcwd() + "/data2"
-    files = os.listdir(cwd)
+    cwd = os.path.dirname(os.path.realpath(__file__))
+    cwd_data = cwd + "/data2"
+    files = os.listdir(cwd_data)
     now = dt.datetime.today()
     last_seen = 0
 
@@ -34,7 +35,7 @@ def main():
         if now-d < dt.timedelta(days=history) or history == -1:
             # if within the last "history" days, or if using all dates...
             # print(l)
-            f = cwd + "/" + l
+            f = cwd_data + "/" + l
             t = np.load(f, allow_pickle = True) #load .npy data array
             if (fold == True):
                 # if doing a folded view
@@ -125,13 +126,13 @@ def main():
     create_folders(history, fold)
     if (history != -1):
         plt.title("Last {} Day(s) Indoor vs. Outdoor Temperatures".format(history))
-        plt.savefig(os.getcwd() + "/plots/last_n_days_plots/Last_{}_days_plot_{}".format(history, time.strftime("%Y%m%d-%H%M%S")), dpi=250)
+        plt.savefig(cwd + "/plots/last_n_days_plots/Last_{}_days_plot_{}".format(history, time.strftime("%Y%m%d-%H%M%S")), dpi=250)
     elif (fold):
         plt.title("All time Indoor vs. Outdoor Temperatures")
-        plt.savefig(os.getcwd() + "/plots/folded_plots/folded_all_time_plot_{}".format(time.strftime("%Y%m%d-%H%M%S")), dpi=250)
+        plt.savefig(cwd + "/plots/folded_plots/folded_all_time_plot_{}".format(time.strftime("%Y%m%d-%H%M%S")), dpi=250)
     else:
         plt.title("All time Indoor vs. Outdoor Temperatures")
-        plt.savefig(os.getcwd() + "/plots/all_time_plots/all_time_plot_{}".format(time.strftime("%Y%m%d-%H%M%S")), dpi=250)
+        plt.savefig(cwd + "/plots/all_time_plots/all_time_plot_{}".format(time.strftime("%Y%m%d-%H%M%S")), dpi=250)
         #plt.show()
 
 
