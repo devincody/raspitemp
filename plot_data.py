@@ -139,22 +139,21 @@ def main():
 def create_folders(history, fold):
     if (history != -1):
         try:
-            os.mkdir(os.getcwd() + "/plots/last_n_days_plots")
+            os.mkdir(cwd + "/plots/last_n_days_plots")
             print("created folder: last_n_days_plots")
         except:
             print("folder exists: last_n_days_plots")
             pass
-
     elif (fold):
         try:
-            os.mkdir(os.getcwd() + "/plots/folded_plots")
+            os.mkdir(cwd + "/plots/folded_plots")
             print("created folder: folded_plots")
         except:
             print("folder exists: folded_plots")
             pass
     else:
         try:
-            os.mkdir(os.getcwd() + "/plots/all_time_plots")
+            os.mkdir(cwd + "/plots/all_time_plots")
             print("created folder: all_time_plots")
         except:
             print("folder exists: all_time_plots")
