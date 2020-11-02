@@ -32,6 +32,9 @@ I just don't want to ssh onto the raspberrypi every time I want to check the tem
 
 Because I'm a data nerd. The temperature data is stored and periodically plotted and sent to my desktop. The data window is selectable. The plotting code is included in this dirctory. See the example [cron file](https://github.com/devincody/raspitemp/blob/master/doc/example_cron.txt) for setting up automatic plotting and copying.
 
+![Temperature Plot with week's worth of data](https://github.com/devincody/raspitemp/blob/master/images/last_7_days.png)
+
+
 ## Parts
 * Temperature Probes:
   - https://www.amazon.com/gp/product/B07DVJ1JHP/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1
