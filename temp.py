@@ -7,9 +7,10 @@ import board
 import digitalio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
+import pandas as pd
+from influxdb import DataFrameClient as DFC
 
 print("starting temp.py")
-
 # Define the Reset Pin
 oled_reset = digitalio.DigitalInOut(board.D4)
 
@@ -49,10 +50,14 @@ base_dir = '/sys/bus/w1/devices/'
 device_folder = glob.glob(base_dir + '28*')
 device_file = '/w1_slave'
 iftttkey = os.environ['IFTTTKEY']
-def turn_onoff(onoff):
-    print("Turned " + onoff)
+
+def room_fan_turn_onoff(onoff):
+    print("Turned room fan " + onoff)
     requests.post("https://maker.ifttt.com/trigger/turn_" + onoff + "_fan_request/with/key/"+iftttkey)
 
+def box_fan_turn_onoff(onoff):
+    print("Turned box fan " + onoff)
+    requests.post("https://maker.ifttt.com/trigger/turn_" + onoff + "_box_fan_request/with/key/"+iftttkey)
 
 def read_temp_raw(filen):
     f = open(filen, 'r')
@@ -78,11 +83,13 @@ N = 100
 #indoor_t = np.zeros(N)
 #outdoor_t = np.zeros(N)
 data = np.zeros((3,N), dtype=object)
+
 iidx = 0
 oidx = 0
-NAVG = 100
+NAVG = 100 
 first_iter = True
 print("entering infinite loop")
+
 while True:
     if first_iter and iidx < NAVG:
         navg = iidx
@@ -107,7 +114,9 @@ while True:
     #outdoor_t[oidx] 
     data[1,iidx] = read_temp(device_folder[1]+device_file)[1]
     data[2, iidx] = dt.datetime.today()
-    
+
+    print(data[2,iidx])
+
     imean = np.mean(data[0,iidx-navg:iidx+1])
     text = "Indoor Temp: {:.2f}".format(imean)
     print(text)
@@ -126,16 +135,25 @@ while True:
     oled.show()
    
 
-    if (iidx % 100 == 1):
-        if (imean > omean and imean > 68 and omean < 90):
-            turn_onoff("on")
+    if (iidx % 400 == 1):
+        if (imean > omean + 1 and imean > 68 and omean < 90):
+            room_fan_turn_onoff("on")
+            if (imean > omean + 4):
+                box_fan_turn_onoff("on")
+            else:
+                box_fan_turn_onoff("off")
         else:
-            turn_onoff("off")
+            room_fan_turn_onoff("off")
 
     iidx += 1
     oidx += 1
     if (iidx == N):
+        print("Hello, output")
         iidx = 0
         oidx = 0
-        np.save("/home/pi/Documents/raspitemp/data2/data_{}.npy".format(time.strftime("%Y%m%d-%H%M%S")), data)
+        pandas_data = pd.DataFrame(index = data[2], data = data[:2].T, columns=["inside temperature", "outside temperature"])
+        pandas_data.index = pandas_data.index.tz_localize("US/Pacific")
+        client = DFC("192.168.1.250")
+        client.write_points(pandas_data, measurement = "temperatures", database = "home_data", time_precision = "ms")
+        #np.save("/home/pi/Documents/raspitemp/data2/data_{}.npy".format(time.strftime("%Y%m%d-%H%M%S")), data)
         #np.save("/home/pi/Documents/temp/data/outdoor_temps_{}.npy".format(time.strftime("%Y%m%d-%H%M%S")),outdoor_t)
